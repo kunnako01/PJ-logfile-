@@ -1,0 +1,286 @@
+<head>
+    <title>Apache log file</title>
+
+
+    <link rel="stylesheet" href="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/css/ol.css" type="text/css">
+    <style>
+        .map {
+            height: 500px;
+            width: 100%;
+        }
+    </style>
+    <script src="https://cdn.rawgit.com/openlayers/openlayers.github.io/master/en/v5.3.0/build/ol.js"></script>
+
+    <style>
+        div.relative {
+            position: relative;
+            left: 30px;
+        }
+    </style>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js" integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg==" crossorigin=""></script>
+    <style type="text/css">
+        #mapid {
+            height: 600px;
+        }
+    </style>
+
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Static Example</title>
+
+    <!-- Bootstrap 4 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+
+    <!-- Font Awesome -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js" integrity="sha256-VBLiveTKyUZMEzJd6z2mhfxIqz3ZATCuVMawPZGzIfA=" crossorigin="anonymous"></script>
+
+    <!-- Tempus Dominus Bootstrap 4 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/css/tempusdominus-bootstrap-4.min.css" integrity="sha256-XPTBwC3SBoWHSmKasAk01c08M6sIA5gF5+sRxqak2Qs=" crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.1.2/js/tempusdominus-bootstrap-4.min.js" integrity="sha256-z0oKYg6xiLq3yJGsp/LsY9XykbweQlHl42jHv2XTBz4=" crossorigin="anonymous"></script>
+
+
+
+</head>
+
+<body>
+    <h1 style="background-color:DodgerBlue;"> Apache log file</h1>
+    <div id="mapid"></div>
+    </head>
+
+    <body>
+        <form method="post">
+            {% csrf_token %}
+            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                <!-- {% csrf_token %} -->
+                {{ form.date }}
+                <div class="input-group-append" data-toggle="datetimepicker" data-target="#datetimepicker1">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+
+            <div class="input-group date" id="datetimepicker2" data-target-input="nearest">
+                <!-- {% csrf_token %} -->
+                {{ form.date2 }}
+                <div class="input-group-append" data-toggle="datetimepicker" data-target="#datetimepicker2">
+                    <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                </div>
+            </div>
+
+            <script>
+                $(function() {
+                    $("#datetimepicker1").datetimepicker({
+                        format: 'DD/MM/YYYY',
+                    });
+                });
+            </script>
+            <script>
+                $(function() {
+                    $("#datetimepicker2").datetimepicker({
+                        format: 'DD/MM/YYYY',
+                    });
+                });
+            </script>
+            <center>
+                <input id="search_box" type="text" name="search_box" placeholder="Search..."> {{form.type1}} {{form.number1}}
+                <br>
+                <input type="submit" value="Submit">
+            </center>
+        </form>
+        <!--       <br>
+         <div align="center">
+             Search
+                 <input type="text" name="search" id="search" class="form=control" />
+            </div>
+        <br>
+   -->
+        <table id="t01">
+            <thead>
+                <style>
+                    table {
+                        width: 100%;
+                    }
+                    
+                    table,
+                    th,
+                    td {
+                        border: 1px solid black;
+                        border-collapse: collapse;
+                    }
+                    
+                    th,
+                    td {
+                        padding: 15px;
+                        text-align: left;
+                    }
+                    
+                    table#t01 tr:nth-child(even) {
+                        background-color: #eee;
+                    }
+                    
+                    table#t01 tr:nth-child(odd) {
+                        background-color: #fff;
+                    }
+                    
+                    table#t01 th {
+                        background-color: gray;
+                        color: white;
+                    }
+                </style>
+                {% if na == 1 %}
+                <tr>
+                    <th scope="col">NO.</th>
+                    <th scope="col">IP Address</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Country</th>
+                    <th scope="col">Lat</th>
+                    <th scope="col">Lon</th>
+                    <th scope="col">Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in data_log %}
+                <tr>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>{{d.IP}}</td>
+                    <td>{{d.Status}}</td>
+                    <td>{{d.Country}}</td>
+                    <td>{{d.Lat}}</td>
+                    <td>{{d.Lon}}</td>
+                    <td>{{d.Count}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+            <!-- {% if qw == 1 and na == 0 %}
+        <tr>
+          <th scope="col">NO.</th>
+          <th scope="col">IP Address</th>
+          <th scope="col">Status</th>
+          <th scope="col">Country</th>
+          <th scope="col">Lat</th>
+          <th scope="col">Lon</th>
+          <th scope="col">Count</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td scope="row">{{ forloop.counter }}</td>
+          <td>Null</td>
+          <td>Null</td>
+          <td>Null</td>
+          <td>Null</td>
+          <td>Null</td>
+          <td>Null</td>
+        </tr>
+      </tbody>
+      {% endif %} -->
+            {% if na == 2 %}
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">IP Address</th>
+                <th scope="col">Count</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for d in data_log %}
+                <tr>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>{{d.IP}}</td>
+                    <td>{{d.Count}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %} {% if na == 3 %}
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">Status</th>
+                <th scope="col">Count</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for d in data_log %}
+                <tr>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>{{d.Status}}</td>
+                    <td>{{d.Count}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %} {% if na == 4 %}
+            <tr>
+                <th scope="col">NO.</th>
+                <th scope="col">Country</th>
+                <th scope="col">Count</th>
+            </tr>
+            </thead>
+            <tbody>
+                {% for d in data_log %}
+                <tr>
+                    <td scope="row">{{ forloop.counter }}</td>
+                    <td>{{d.Country}}</td>
+                    <td>{{d.Count}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            {% endif %}
+        </table>
+
+
+    </body>
+
+
+    </html>
+
+    <script>
+        var mymap = L.map('mapid').setView([41.5403, 2.2131], 13);
+
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
+            maxZoom: 5,
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            id: 'mapbox.streets'
+        }).addTo(mymap);
+        var x1 = JSON.parse("{{datamarker}}".replace(/&#39;/g, "\""));
+        //  console.log('foobar');             
+        console.log(x1);
+        for (i = 0; i < x1.length; i++) {
+            L.marker([x1[i].Lat, x1[i].Lon]).addTo(mymap)
+                .bindPopup(x1[i].Country).openPopup();
+        }
+    </script>
+
+    <!-- <script>
+      $(document).ready(function(){  
+             $('#search').keyup(function(){  
+                  search_table($(this).val());  
+             });  
+             function search_table(value){  
+                  $('#t01 tr').each(function(){  
+                       var found = 'false';  
+                       $(this).each(function(){  
+                            if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)  
+                            {  
+                                 found = 'true';  
+                            }  
+                       });  
+                       if(found == 'true')  
+                       {  
+                            $(this).show();  
+                       }  
+                       else  
+                       {  
+                            $(this).hide();  
+                       }  
+                  });  
+             }  
+        });  
+   </script>   -->
